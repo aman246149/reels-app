@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "993381651740",
+    "project_id": "reels-app-flutter",
+    "storage_bucket": "reels-app-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993381651740:android:e847063a856050fecdd6d9",
+        "android_client_info": {
+          "package_name": "com.example.reels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "993381651740-8n14ptgr6lmp52a8r0bdv21iulhp1ekb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmBudUeav61xQiayr7VO92H00XeiwgDk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "993381651740-8n14ptgr6lmp52a8r0bdv21iulhp1ekb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
