@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reels/Resourses/Auth_Methods.dart';
+import 'package:reels/Screens/HomeScreen.dart';
 import 'package:reels/Screens/RegisterScreen.dart';
 import 'package:reels/Widgets/SnackBar.dart';
 import 'package:reels/utils/Widgets/TextInputField.dart';
@@ -82,7 +83,15 @@ class _LoginScreenState extends State<LoginScreen> {
               onTap: () async {
                 String response = await Auth_Methods()
                     .login(emailController.text, passwordController.text);
-                customSnackBar(response, context);
+                if (response == "success") {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ));
+                } else {
+                  customSnackBar(response, context);
+                }
               },
               child: Container(
                 padding: const EdgeInsets.only(top: 5, bottom: 5),

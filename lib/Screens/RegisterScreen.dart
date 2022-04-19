@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reels/Resourses/Auth_Methods.dart';
+import 'package:reels/Screens/HomeScreen.dart';
 import 'package:reels/Screens/LoginScreen.dart';
 import 'package:reels/Widgets/ImagePickerCustom.dart';
 import 'package:reels/Widgets/SnackBar.dart';
@@ -132,7 +133,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 String res = await Auth_Methods().signUp(emailController.text,
                     passwordController.text, img!, usernameController.text);
 
-                customSnackBar(res, context);
+                if (res == "success") {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ));
+                } else {
+                  customSnackBar(res, context);
+                }
               },
               child: Container(
                 padding: const EdgeInsets.only(top: 5, bottom: 5),
