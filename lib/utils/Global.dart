@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reels/Screens/AddVideoScreen.dart';
+import 'package:reels/Screens/FeedScreen.dart';
 
 List<Widget> pages = [
   // ignore: prefer_const_constructors
-  Center(
-    child: const Text(
-      "Home",
-      style: TextStyle(color: Colors.white),
-    ),
-  ),
+  const FeedScreen(),
   const Center(
       child: Text(
     "Search",
