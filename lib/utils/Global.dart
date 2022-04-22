@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reels/Screens/AddVideoScreen.dart';
 
 List<Widget> pages = [
   // ignore: prefer_const_constructors
@@ -13,11 +14,7 @@ List<Widget> pages = [
     "Search",
     style: TextStyle(color: Colors.white),
   )),
-  const Center(
-      child: Text(
-    "Add",
-    style: TextStyle(color: Colors.white),
-  )),
+  const AddVideoScreen(),
   const Center(
       child: Text(
     "Message",
