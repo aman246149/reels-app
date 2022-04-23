@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import '../Models/Video.dart';
+
 class VideoScreenWidget extends StatefulWidget {
-  const VideoScreenWidget({Key? key}) : super(key: key);
+  final Video data;
+  const VideoScreenWidget({Key? key, required this.data}) : super(key: key);
 
   @override
   State<VideoScreenWidget> createState() => _VideoScreenWidgetState();
@@ -15,8 +18,7 @@ class _VideoScreenWidgetState extends State<VideoScreenWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(
-        "https://assets.mixkit.co/videos/preview/mixkit-going-down-a-curved-highway-down-a-mountain-41576-large.mp4")
+    _videoPlayerController = VideoPlayerController.network(widget.data.videoUrl)
       ..initialize().then((value) => {
             _videoPlayerController.play(),
             _videoPlayerController.setVolume(1),

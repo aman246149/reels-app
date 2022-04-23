@@ -41,9 +41,7 @@ class Video {
         "thumbnail": thumbnail,
       };
 
-  static Video fromSnap(DocumentSnapshot snap) {
-    var snapshot = snap.data() as Map<String, dynamic>;
-
+  static Video fromSnap(Map<String, dynamic> snapshot) {
     return Video(
       username: snapshot['username'],
       uid: snapshot['uid'],

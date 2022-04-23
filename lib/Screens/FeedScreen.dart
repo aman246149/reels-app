@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:reels/Models/Video.dart';
 import 'package:reels/Widgets/VideoScreenWidget.dart';
+import 'package:reels/utils/Widgets/CirculationAnimation.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -7,23 +10,38 @@ class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: PageView.builder(
-      itemCount: 10,
-      controller: PageController(initialPage: 0, viewportFraction: 1),
-      scrollDirection: Axis.vertical,
-      itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            VideoScreenWidget(),
-            buildBottomColumn(),
-            rightSideColumn()
-          ],
+        body: StreamBuilder(
+      stream: FirebaseFirestore.instance.collection("videos").snapshots(),
+      builder: ((context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshots) {
+        if (snapshots.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        return PageView.builder(
+          itemCount: snapshots.data!.docs.length,
+          controller: PageController(initialPage: 0, viewportFraction: 1),
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            final Video data =
+                Video.fromSnap(snapshots.data!.docs[index].data());
+
+            return Stack(
+              children: [
+                VideoScreenWidget(data: data),
+                buildBottomColumn(data),
+                rightSideColumn(data)
+              ],
+            );
+          },
         );
-      },
+      }),
     ));
   }
 
-  Align rightSideColumn() {
+  Align rightSideColumn(Video data) {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
@@ -43,7 +61,7 @@ class FeedScreen extends StatelessWidget {
               Icons.favorite,
               color: Colors.red,
             ),
-            Text("2"),
+            Text(data.likes.length.toString()),
             SizedBox(
               height: 15,
             ),
@@ -51,7 +69,7 @@ class FeedScreen extends StatelessWidget {
               Icons.comment,
               color: Colors.white,
             ),
-            Text("1"),
+            Text(data.commentCount.toString()),
             SizedBox(
               height: 15,
             ),
@@ -60,17 +78,20 @@ class FeedScreen extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            CircleAvatar(
+            CircularAnimation(
+                child: CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
-            )
+              backgroundImage: NetworkImage(
+                  "https://images.unsplash.com/photo-1650479273962-f029bf1e8c7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
+            ))
           ],
         ),
       ),
     );
   }
 
-  Padding buildBottomColumn() {
+  Padding buildBottomColumn(Video data) {
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, bottom: 8),
       child: Column(
@@ -82,11 +103,11 @@ class FeedScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Aman Singh"),
-              SizedBox(
+              Text(data.songName),
+              const SizedBox(
                 height: 5,
               ),
-              Text("No Song,Only Trip"),
+              Text(data.caption),
               SizedBox(
                 height: 5,
               ),

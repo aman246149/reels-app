@@ -63,10 +63,9 @@ class UploadVideo {
           commentCount: 0,
           shareCount: 0,
           uid: uid,
-          profilePhoto:
-              (userDoc.data()! as Map<String, dynamic>)['profilePhoto'],
+          profilePhoto: (userDoc.data()! as Map<String, dynamic>)['photoUrl'],
           songName: songName,
-          username: (userDoc.data()! as Map<String, dynamic>)['name']);
+          username: (userDoc.data()! as Map<String, dynamic>)['userName']);
 
       await FirebaseFirestore.instance
           .collection('videos')
