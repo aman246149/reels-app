@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reels/Resourses/UploadComments.dart';
+import 'package:reels/utils/constant.dart';
 import 'package:timeago/timeago.dart' as tago;
 import '../Models/CommentModel.dart';
 
@@ -35,6 +36,12 @@ class _CommentScreenState extends State<CommentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: mobileBackgroundColor,
+          title: const Text(
+            "Comments",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
