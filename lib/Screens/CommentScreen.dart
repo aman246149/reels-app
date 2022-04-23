@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reels/Resourses/UploadComments.dart';
 import 'package:timeago/timeago.dart' as tago;
@@ -95,40 +96,52 @@ class _CommentScreenState extends State<CommentScreen> {
                             ),
                           ],
                         ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              tago.format(
-                                comment.datePublished.toDate(),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                tago.format(
+                                  comment.datePublished.toDate(),
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
                               ),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
+                              const SizedBox(
+                                width: 10,
                               ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              comment.likes.length.toString(),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
+                              Text(
+                                "${comment.likes.length.toString()} likes",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         trailing: InkWell(
-                          onTap: () {},
-                          child:
-                              Icon(Icons.favorite, size: 25, color: Colors.red),
+                          onTap: () async {
+                            UploadCommentsToFirebase().updateLikeCount(
+                                widget.postId, comment.id, comment.likes);
+                          },
+                          child: Icon(
+                            Icons.favorite,
+                            size: 25,
+                            color: comment.likes.contains(
+                                    FirebaseAuth.instance.currentUser!.uid)
+                                ? Colors.red
+                                : Colors.white,
+                          ),
                         ),
                       );
                     },
                   );
                 },
               )),
-              Divider(),
+              const Divider(),
               ListTile(
                 title: TextFormField(
                   controller: _commentController,

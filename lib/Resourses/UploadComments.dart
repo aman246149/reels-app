@@ -38,4 +38,32 @@ class UploadCommentsToFirebase {
       print(e.toString());
     }
   }
+
+  updateLikeCount(String postId, String commentId, List likes) async {
+    try {
+      if (likes.contains(FirebaseAuth.instance.currentUser!.uid)) {
+        await FirebaseFirestore.instance
+            .collection("videos")
+            .doc(postId)
+            .collection("comments")
+            .doc(commentId)
+            .update({
+          "likes":
+              FieldValue.arrayRemove([FirebaseAuth.instance.currentUser!.uid])
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection("videos")
+            .doc(postId)
+            .collection("comments")
+            .doc(commentId)
+            .update({
+          "likes":
+              FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid])
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
