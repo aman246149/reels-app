@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reels/Models/Video.dart';
+import 'package:reels/Screens/CommentScreen.dart';
 import 'package:reels/Widgets/VideoScreenWidget.dart';
 import 'package:reels/utils/Widgets/CirculationAnimation.dart';
 
@@ -20,6 +22,14 @@ class FeedScreen extends StatelessWidget {
           );
         }
 
+        if (snapshots.data!.docs.isEmpty) {
+          return const Center(
+              child: Text(
+            "No Posts Available",
+            style: TextStyle(fontSize: 22),
+          ));
+        }
+
         return PageView.builder(
           itemCount: snapshots.data!.docs.length,
           controller: PageController(initialPage: 0, viewportFraction: 1),
@@ -27,12 +37,13 @@ class FeedScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             final Video data =
                 Video.fromSnap(snapshots.data!.docs[index].data());
+            final String postId = snapshots.data!.docs[index].id;
 
             return Stack(
               children: [
                 VideoScreenWidget(data: data),
                 buildBottomColumn(data),
-                rightSideColumn(data)
+                rightSideColumn(data, postId, context)
               ],
             );
           },
@@ -41,7 +52,7 @@ class FeedScreen extends StatelessWidget {
     ));
   }
 
-  Align rightSideColumn(Video data) {
+  Align rightSideColumn(Video data, String postId, BuildContext context) {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
@@ -50,39 +61,78 @@ class FeedScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Icon(
-              Icons.favorite,
-              color: Colors.red,
-            ),
+            IconButton(
+                onPressed: () async {
+                  if (data.likes
+                      .contains(FirebaseAuth.instance.currentUser!.uid)) {
+                    //remove our likes
+                    await FirebaseFirestore.instance
+                        .collection("videos")
+                        .doc(postId)
+                        .update({
+                      'likes': FieldValue.arrayRemove(
+                          [FirebaseAuth.instance.currentUser!.uid])
+                    });
+                  } else {
+                    // add our likes
+                    await FirebaseFirestore.instance
+                        .collection("videos")
+                        .doc(postId)
+                        .update({
+                      'likes': FieldValue.arrayUnion(
+                          [FirebaseAuth.instance.currentUser!.uid])
+                    });
+                  }
+                },
+                icon: Icon(
+                  Icons.favorite,
+                  color: data.likes
+                          .contains(FirebaseAuth.instance.currentUser!.uid)
+                      ? Colors.red
+                      : Colors.white,
+                )),
             Text(data.likes.length.toString()),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Icon(
-              Icons.comment,
-              color: Colors.white,
-            ),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentScreen(
+                            postId: data.id,
+                            profilePhoto: data.profilePhoto,
+                            username: data.username,
+                            countComment: data.commentCount,
+                            ),
+                      ));
+                },
+                icon: Icon(
+                  Icons.comment,
+                  color: Colors.white,
+                )),
             Text(data.commentCount.toString()),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Icon(Icons.replay),
-            Text("0"),
-            SizedBox(
+            const Icon(Icons.replay),
+            const Text("0"),
+            const SizedBox(
               height: 15,
             ),
-            CircularAnimation(
+            const CircularAnimation(
                 child: CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(
+              backgroundImage: const NetworkImage(
                   "https://images.unsplash.com/photo-1650479273962-f029bf1e8c7a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxNXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"),
             ))
           ],
@@ -108,13 +158,13 @@ class FeedScreen extends StatelessWidget {
                 height: 5,
               ),
               Text(data.caption),
-              SizedBox(
+              const SizedBox(
                 height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Icon(Icons.music_note), Text("IDK")],
+                children: [const Icon(Icons.music_note), const Text("IDK")],
               )
             ],
           )
