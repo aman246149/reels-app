@@ -1,16 +1,18 @@
-# reels
+## Features of the app
+- Responsive Flutter Gaming Reel App
+- Email & Password Authentication
+- Share Video with Caption
+- Display Video with Caption
+- Like & Comment on Posts
+- Search Users
+- Follow Users
+- EVERYTHING REAL TIME
+- Sign Out
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### What I learned From this Project
+- Handling Authentication flow for persistant UI
+- Upload Videos with compress
+- Lots of Firebase Concepts
+- Collections And Subcollection in Firebase
+- Writing clean Code
+- Learn More things about flutter widgets
